@@ -38,7 +38,7 @@ class CategoryDetail(View):
             'category': category,
             'products': products
         }
-        return render(request, 'category_detail.html', context)
+        return render(request, 'Category_detail.html', context)
 
 
 class ProductCreate(View):
