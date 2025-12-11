@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+<p>Price: {{ product.price }}</p>
+<p>Quantity: {{ product.quantity }}</p>
+<p>Description: {{ product.description }}</p>
+<p>Available: {{ product.is_available }}</p>
+<p>Created at: {{ product.created_at }}</p>
+
+{% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:300px; max-height:300px;">
+{% endif %}
+
+<br><br>
+
+<a href="{% url 'home' %}">Back to all products</a> |
+<a href="{% url 'category_detail' product.category.pk %}">Back to category</a> |
+<a href="{% url 'product_update' product.pk %}">Update</a> |
+<a href="{% url 'product_delete' product.pk %}">Delete</a>
+
+{% endblock %}
