@@ -3,18 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}My Shop{% endblock %}</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            background: #f9f7f3;
+        }
+
+        header {
+            background: #2b221a; /* dark chocolate */
+            color: #f7d774; /* gold */
+            padding: 15px 20px;
+            font-size: 18px;
+        }
+
+        header a {
+            color: #f7d774;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            background: #fff8e1; /* soft gold background */
+            padding: 12px 20px;
+            border-bottom: 2px solid #f2d27a;
+        }
+
+        nav h3 {
+            margin: 0 0 10px 0;
+            color: #5a4a33; /* warm brown */
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        nav a {
+            display: inline-block;
+            background: #f2d27a; /* gold */
+            color: #3b2f23;
+            padding: 7px 14px;
+            margin-right: 8px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            background: #e6c165; /* darker gold */
+        }
+
+        main {
+            padding: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
 <header>
-    <a href="{% url 'home' %}">Home</a> |
+    <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'product_create' %}">Create Product</a>
 </header>
 
 <nav>
     <h3>Categories</h3>
     {% for c in categories %}
-        <a href="{% url 'category_detail' c.pk %}">{{ c.name }}</a> |
+        <a href="{% url 'category_detail' c.pk %}">{{ c.name }}</a>
+    {% empty %}
+        <p>No categories available.</p>
     {% endfor %}
 </nav>
 

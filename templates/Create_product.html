@@ -3,13 +3,52 @@
 {% block title %}Create Product{% endblock %}
 
 {% block content %}
-<h1>Create New Product</h1>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
+<div style="
+    max-width:600px;
+    margin:40px auto;
+    background:#fffdf7;
+    padding:30px;
+    border-radius:12px;
+    border:1px solid #f2d27a;
+    box-shadow:0 0 10px rgba(0,0,0,0.12);
+">
 
-<a href="{% url 'home' %}">Back to all products</a>
+    <h1 style="text-align:center; color:#a88632; margin-bottom:25px;">
+        Create New Product
+    </h1>
+
+    <form method="post" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:15px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" style="
+            padding:10px 20px;
+            background:#f2d27a;
+            color:#3b2f23;
+            font-weight:600;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            transition:0.2s;
+        " onmouseover="this.style.background='#e3be62'" onmouseout="this.style.background='#f2d27a'">
+            Create
+        </button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'home' %}" style="
+            text-decoration:none;
+            color:#3b2f23;
+            font-weight:600;
+            padding:6px 12px;
+            border-radius:6px;
+            background:#f7e0a2;
+            transition:0.2s;
+        " onmouseover="this.style.background='#e8cf7a'" onmouseout="this.style.background='#f7e0a2'">
+            ⬅ Back to all products
+        </a>
+    </div>
+
+</div>
+
 {% endblock %}

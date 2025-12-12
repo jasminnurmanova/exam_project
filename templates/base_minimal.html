@@ -2,14 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Jewelry Shop{% endblock %}</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffdf7;
+        }
+
+        header {
+            background: #f2d27a;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        header a {
+            color: #3b2f23;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        header a:hover {
+            color: #8a6a39;
+        }
+
+        nav {
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        nav a {
+            display: inline-block;
+            margin: 0 5px 5px 0;
+            padding: 5px 10px;
+            background: #f7e0a2;
+            color: #3b2f23;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            background: #e8cf7a;
+        }
+
+        main {
+            padding: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
 <header>
     <a href="{% url 'home' %}">Home</a> |
     <a href="{% url 'product_create' %}">Create Product</a>
 </header>
+
+<!-- Categories Row -->
+<nav>
+    {% for c in categories %}
+        <a href="{% url 'category_detail' c.pk %}">{{ c.name }}</a>
+    {% empty %}
+        <span>No categories available</span>
+    {% endfor %}
+</nav>
 
 <main>
     {% block content %}

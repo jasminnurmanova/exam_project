@@ -3,12 +3,55 @@
 {% block title %}Delete {{ product.name }}{% endblock %}
 
 {% block content %}
-<h1>Delete Product: {{ product.name }}</h1>
-<p>Are you sure you want to delete this product?</p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'detail' product.pk %}">Cancel</a>
-</form>
+<div style="
+    max-width:500px;
+    margin:50px auto;
+    background:#fffdf7;
+    padding:25px;
+    border-radius:12px;
+    border:1px solid #f2d27a;
+    box-shadow:0 0 10px rgba(0,0,0,0.12);
+    text-align:center;
+">
+
+    <h1 style="color:#a88632; margin-bottom:20px;">
+        Delete Product: {{ product.name }}
+    </h1>
+
+    <p style="font-size:16px; color:#4d3b28; margin-bottom:25px;">
+        Are you sure you want to delete this product?
+    </p>
+
+    <form method="post" style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        {% csrf_token %}
+        <button type="submit" style="
+            padding:10px 20px;
+            background:#c9934c;
+            color:white;
+            font-weight:600;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            transition:0.2s;
+        " onmouseover="this.style.background='#b27b3e'" onmouseout="this.style.background='#c9934c'">
+            Yes, Delete
+        </button>
+
+        <a href="{% url 'detail' product.pk %}" style="
+            padding:10px 20px;
+            background:#f2d27a;
+            color:#3b2f23;
+            font-weight:600;
+            border-radius:8px;
+            text-decoration:none;
+            display:inline-block;
+            transition:0.2s;
+        " onmouseover="this.style.background='#e3be62'" onmouseout="this.style.background='#f2d27a'">
+            Cancel
+        </a>
+    </form>
+
+</div>
+
 {% endblock %}

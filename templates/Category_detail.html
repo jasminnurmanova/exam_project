@@ -3,18 +3,57 @@
 {% block title %}Category: {{ category.name }}{% endblock %}
 
 {% block content %}
-<h1>Category: {{ category.name }}</h1>
+
+<h1 style="text-align:center; color:#a88632; margin-bottom:25px;">
+    Category: {{ category.name }}
+</h1>
+
+<!-- Products Grid -->
+<div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
 
 {% for p in products %}
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <div style="
+        width:250px;
+        border:1px solid #f2d27a;
+        padding:15px;
+        background:#fffdf7;
+        border-radius:12px;
+        box-shadow:0 0 8px rgba(0,0,0,0.12);
+        text-align:center;
+    ">
         {% if p.image %}
-            <img src="{{ p.image.url }}" alt="{{ p.name }}" style="max-width:150px; max-height:150px;">
+            <img src="{{ p.image.url }}" alt="{{ p.name }}"
+                 style="max-width:200px; max-height:200px; border-radius:10px; margin-bottom:10px;">
         {% endif %}
-        <p>
-            <a href="{% url 'detail' p.pk %}">{{ p.name }}</a> — {{ p.price }}
+
+        <h3 style="color:#4d3b28; font-size:18px; margin-bottom:10px;">
+            {{ p.name }}
+        </h3>
+
+        <p style="color:#7a5f3e; font-size:16px; margin-bottom:15px;">
+            {{ p.price }}
         </p>
+
+        <a href="{% url 'detail' p.pk %}"
+           style="
+               display:inline-block;
+               background:#f2d27a;
+               color:#3b2f23;
+               padding:8px 16px;
+               border-radius:8px;
+               text-decoration:none;
+               font-weight:600;
+               transition:0.2s;
+           "
+           onmouseover="this.style.background='#e3be62'"
+           onmouseout="this.style.background='#f2d27a'">
+            See Details
+        </a>
     </div>
 {% empty %}
-    <p>No products in this category.</p>
+    <p style="text-align:center;">No products in this category.</p>
 {% endfor %}
+
+</div>
+
 {% endblock %}

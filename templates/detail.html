@@ -3,22 +3,87 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ product.name }}</h1>
-<p>Price: {{ product.price }}</p>
-<p>Quantity: {{ product.quantity }}</p>
-<p>Description: {{ product.description }}</p>
-<p>Available: {{ product.is_available }}</p>
-<p>Created at: {{ product.created_at }}</p>
 
-{% if product.image %}
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:300px; max-height:300px;">
-{% endif %}
+<div style="
+    max-width:800px;
+    margin:30px auto;
+    background:#fffdf7;
+    padding:25px;
+    border-radius:15px;
+    border:1px solid #f2d27a;
+    box-shadow:0 0 10px rgba(0,0,0,0.12);
+">
 
-<br><br>
+    <!-- Product Name -->
+    <h1 style="text-align:center; color:#a88632; margin-bottom:20px;">
+        {{ product.name }}
+    </h1>
 
-<a href="{% url 'home' %}">Back to all products</a> |
-<a href="{% url 'category_detail' product.category.pk %}">Back to category</a> |
-<a href="{% url 'product_update' product.pk %}">Update</a> |
-<a href="{% url 'product_delete' product.pk %}">Delete</a>
+    <!-- Image -->
+    <div style="text-align:center; margin-bottom:20px;">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                 style="max-width:350px; max-height:350px; border-radius:12px;">
+        {% endif %}
+    </div>
+
+    <!-- Info -->
+    <div style="font-size:18px; line-height:1.6; color:#4d3b28;">
+
+        <p><strong style="color:#a88632;">Price:</strong> {{ product.price }}</p>
+        <p><strong style="color:#a88632;">Quantity:</strong> {{ product.quantity }}</p>
+        <p><strong style="color:#a88632;">Available:</strong> {{ product.is_available }}</p>
+        <p><strong style="color:#a88632;">Created at:</strong> {{ product.created_at }}</p>
+
+        {% if product.description %}
+        <p>
+            <strong style="color:#a88632;">Description:</strong><br>
+            {{ product.description }}
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Buttons -->
+    <div style="margin-top:30px; text-align:center;">
+
+        <!-- Back -->
+        <a href="{% url 'home' %}"
+           style="padding:10px 20px; margin:5px;
+                  background:#f2d27a; color:#3b2f23;
+                  border-radius:8px; font-weight:600;
+                  text-decoration:none; display:inline-block;">
+            ⬅ Back to Products
+        </a>
+
+        <!-- Category -->
+        <a href="{% url 'category_detail' product.category.pk %}"
+           style="padding:10px 20px; margin:5px;
+                  background:#f2d27a; color:#3b2f23;
+                  border-radius:8px; font-weight:600;
+                  text-decoration:none; display:inline-block;">
+            Category: {{ product.category.name }}
+        </a>
+
+        <!-- Update -->
+        <a href="{% url 'product_update' product.pk %}"
+           style="padding:10px 20px; margin:5px;
+                  background:#e3be62; color:#3b2f23;
+                  border-radius:8px; font-weight:600;
+                  text-decoration:none; display:inline-block;">
+            ✏ Update
+        </a>
+
+        <!-- Delete -->
+        <a href="{% url 'product_delete' product.pk %}"
+           style="padding:10px 20px; margin:5px;
+                  background:#c9934c; color:white;
+                  border-radius:8px; font-weight:600;
+                  text-decoration:none; display:inline-block;">
+            ❌ Delete
+        </a>
+
+    </div>
+
+</div>
 
 {% endblock %}

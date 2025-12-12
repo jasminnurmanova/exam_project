@@ -3,39 +3,70 @@
 {% block title %}Products{% endblock %}
 
 {% block content %}
-<h1>Products</h1>
 
-<!-- Форма поиска -->
-<form method="get">
-    <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
-    <button type="submit">Search</button>
+<h1 style="color:#a88632; text-align:center; margin-bottom:20px;">
+    Products
+</h1>
+
+<!-- Search form -->
+<form method="get" style="text-align:center; margin-bottom:20px;">
+    <input type="text" name="q" placeholder="Search products..." value="{{ query }}"
+           style="padding:8px; width:250px; border-radius:6px; border:1px solid #c9a341;">
+    <button type="submit"
+            style="padding:8px 15px; border:none; background:#f2d27a; color:#3b2f23;
+                   border-radius:6px; cursor:pointer; font-weight:600;">
+        Search
+    </button>
 </form>
 
-<!-- Список продуктов -->
+<!-- Product list -->
+<div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+
 {% if products %}
     {% for p in products %}
-        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <div style="
+            width:250px;
+            border:1px solid #f2d27a;
+            padding:15px;
+            background:#fffdf7;
+            border-radius:12px;
+            box-shadow:0 0 8px rgba(0,0,0,0.12);
+            text-align:center;
+        ">
             {% if p.image %}
-                <img src="{{ p.image.url }}" alt="{{ p.name }}" style="max-width:150px; max-height:150px;">
+                <img src="{{ p.image.url }}" alt="{{ p.name }}"
+                     style="max-width:200px; max-height:200px; border-radius:10px;">
             {% endif %}
-            <p>
-                <a href="{% url 'detail' p.pk %}">{{ p.name }}</a> — {{ p.price }}
+
+            <h3 style="margin:10px 0; color:#4d3b28; font-size:20px;">{{ p.name }}</h3>
+
+            <p style="font-size:18px; color:#7a5f3e; margin-bottom:15px;">
+                {{ p.price }}
             </p>
+
+            <!-- Golden button -->
+            <a href="{% url 'detail' p.pk %}"
+               style="
+                   display:inline-block;
+                   background:#f2d27a;
+                   color:#3b2f23;
+                   padding:10px 20px;
+                   border-radius:8px;
+                   text-decoration:none;
+                   font-weight:600;
+                   transition:0.2s;
+               "
+               onmouseover="this.style.background='#e3be62'"
+               onmouseout="this.style.background='#f2d27a'">
+                See Details
+            </a>
         </div>
     {% endfor %}
+
 {% else %}
-    <p>No products found.</p>
+    <p style="text-align:center;">No products found.</p>
 {% endif %}
 
-<hr>
-
-<h2>Categories</h2>
-<ul>
-    {% for c in categories %}
-        <li>
-            <a href="{% url 'category_detail' c.pk %}">{{ c.name }}</a>
-        </li>
-    {% endfor %}
-</ul>
+</div>
 
 {% endblock %}
