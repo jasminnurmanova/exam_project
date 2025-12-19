@@ -1,7 +1,10 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate,update_session_auth_hash
-from .forms import CustomUserRegisterForm
+from .forms import CustomUserRegisterForm, CustomUserUpdateForm
 from django.views import View
+
+from .models import CustomUser
+
 
 class RegisterView(View):
     def get(self,request):
@@ -14,8 +17,14 @@ class RegisterView(View):
             user=form.save()
             login(request,user)
             return redirect ('home')
-
         return render(request,'user/regis.html',{'form':form})
+
+    def save(self,commit=True):
+        user =super().save(commit=False)
+        password=self.cleaned_data['password1']
+        user.set_password(password)
+        user.save()
+        return user
 
 class ProfileView(View):
     def get(self,request):
@@ -40,3 +49,18 @@ class LogoutView(View):
     def get(self,request):
         logout(request)
         return redirect('home')
+
+class ProfileUpdateView(View):
+    def get(self,request):
+        form = CustomUserUpdateForm(instance=request.user)
+        return render(request,'user/profile-update.html',{'form':form})
+
+    def post(self,request):
+        user = request.user
+        form = CustomUserUpdateForm(request.POST,request.FILES,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect ('user:profile')
+
+        return render(request,'user/profile-update.html',{'form':form })
+
