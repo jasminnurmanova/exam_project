@@ -1,14 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
-<body>
-{{user.last_name}}
-{{user.first_name}}
-{{user.username}}
-{{user.address}}
-<img src="{{ user.image.url }}">
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}  {# <-- LOAD STATIC HERE #}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <!-- Profile Image -->
+        <div class="profile-image">
+            {% if user.image %}
+                <img src="{{ user.image.url }}" alt="Profile Picture">
+            {% else %}
+                <img src="{% static 'default_user.png' %}" alt="Profile Picture">
+            {% endif %}
+        </div>
+
+        <!-- Profile Info -->
+        <div class="profile-info">
+            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+            <p class="username">@{{ user.username }}</p>
+            {% if user.address %}
+                <p class="address">{{ user.address }}</p>
+            {% endif %}
+
+            <!-- Edit Profile Button -->
+            <a href="#" class="edit-button">✏️ Edit Profile</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.profile-card {
+    background: #fff8e1;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+}
+
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #f2d27a;
+    margin-bottom: 20px;
+}
+
+.profile-info h2 {
+    margin: 10px 0;
+    color: #5a4a33;
+}
+
+.profile-info .username {
+    color: #3b2f23;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.profile-info .address {
+    color: #3b2f23;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.edit-button {
+    display: inline-block;
+    background: #f2d27a;
+    color: #3b2f23;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.edit-button:hover {
+    background: #e6c165;
+}
+
+@media (min-width: 768px) {
+    .profile-card {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: 30px;
+    }
+
+    .profile-image {
+        flex-shrink: 0;
+    }
+
+    .profile-info {
+        flex-grow: 1;
+    }
+}
+</style>
+{% endblock %}

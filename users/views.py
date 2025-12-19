@@ -20,5 +20,23 @@ class RegisterView(View):
 class ProfileView(View):
     def get(self,request):
         user = request.user
-        return render(request,'users/profile.html',{'user':user})
+        return render(request,'user/profile.html',{'user':user})
 
+
+class LoginView(View):
+    def get(self,request):
+        return render(request,'user/login.html')
+
+    def post(self,request):
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        user = authenticate(request,username=username,password=password)
+        if user:
+            login(request,user)
+            return redirect('home')
+        return render (request,'user/login.html')
+
+class LogoutView(View):
+    def get(self,request):
+        logout(request)
+        return redirect('home')

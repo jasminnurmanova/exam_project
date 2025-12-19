@@ -1,22 +1,114 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}My Shop{% endblock %}</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            background: #f9f7f3;
+        }
 
-{% block title %}Profile{% endblock %}
+        header {
+            background: #2b221a;
+            color: #f7d774;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-{% block content %}
-<div style="max-width: 600px; margin: 40px auto; padding: 20px; background: #fff8e1; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
-    <div style="text-align: center;">
-        <img src="{{ user.image.url }}" alt="Profile Picture" style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #f2d27a; margin-bottom: 20px;">
-        <h2 style="margin: 10px 0; color: #5a4a33;">{{ user.first_name }} {{ user.last_name }}</h2>
-        <p style="color: #3b2f23; font-size: 16px;">@{{ user.username }}</p>
-        {% if user.address %}
-            <p style="color: #3b2f23; font-size: 14px;">{{ user.address }}</p>
-        {% endif %}
+        header a {
+            color: #f7d774;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
 
-        <!-- Edit Profile Button -->
-        <a href="{% url 'edit_profile' %}"
-           style="display: inline-block; margin-top: 20px; background: #f2d27a; color: #3b2f23; padding: 10px 25px; border-radius: 8px; font-weight: 500; text-decoration: none; transition: 0.2s;">
-            ✏️ Edit Profile
-        </a>
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav {
+            background: #fff8e1;
+            padding: 12px 20px;
+            border-bottom: 2px solid #f2d27a;
+        }
+
+        nav h3 {
+            margin: 0 0 10px 0;
+            color: #5a4a33;
+            font-weight: 600;
+            font-size: 17px;
+        }
+
+        nav a {
+            display: inline-block;
+            background: #f2d27a;
+            color: #3b2f23;
+            padding: 7px 14px;
+            margin-right: 8px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            background: #e6c165;
+        }
+
+        main {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <!-- Left side buttons -->
+    <div class="header-buttons">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'product_create' %}">Create Product</a>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Right side user buttons -->
+    <div class="header-buttons">
+        {% if user.is_authenticated %}
+            <a href="{% url 'user:profile' %}">👤 Profile</a>
+            <a href="#">✏️ Edit Profile</a>
+            <a href="{% url 'user:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'user:login' %}">Login</a>
+            <a href="{% url 'user:regis' %}">Register</a>
+        {% endif %}
+    </div>
+</header>
+
+<nav>
+    <h3>Categories</h3>
+    {% for c in categories %}
+        <a href="{% url 'category_detail' c.pk %}">{{ c.name }}</a>
+    {% empty %}
+        <p>No categories available.</p>
+    {% endfor %}
+</nav>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>
