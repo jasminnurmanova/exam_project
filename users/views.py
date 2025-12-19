@@ -2,14 +2,15 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate,update_session_auth_hash
 from .forms import CustomUserRegisterForm, CustomUserUpdateForm
 from django.views import View
-
+from products.models import Product
 from .models import CustomUser
 
 
 class RegisterView(View):
     def get(self,request):
         form = CustomUserRegisterForm()
-        return render(request,'user/regis.html',{'form':form})
+        products=form.products.all().order_by('-id')
+        return render(request,'user/regis.html',{'form':form,'products':products})
 
     def post(self,request):
         form = CustomUserRegisterForm(request.POST,request.FILES)

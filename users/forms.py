@@ -40,7 +40,3 @@ class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model= CustomUser
         fields=['username','first_name','last_name','email','image','address']
-
-    def clean_username(self):
-        username=self.cleaned_data['username']
-        user_exists(username)
