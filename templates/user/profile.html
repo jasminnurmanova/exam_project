@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% load static %}  {# <-- LOAD STATIC HERE #}
+{% load static %}
 
 {% block title %}Profile{% endblock %}
 
 {% block content %}
 <div class="profile-container">
     <div class="profile-card">
+
         <!-- Profile Image -->
         <div class="profile-image">
             {% if user.image %}
@@ -19,13 +20,23 @@
         <div class="profile-info">
             <h2>{{ user.first_name }} {{ user.last_name }}</h2>
             <p class="username">@{{ user.username }}</p>
+
             {% if user.address %}
                 <p class="address">{{ user.address }}</p>
             {% endif %}
 
-            <!-- Edit Profile Button -->
-            <a href="{% url 'user:update-profile' %}" class="edit-button">✏️ Edit Profile</a>
+            <!-- Buttons -->
+            <div class="profile-buttons">
+                <a href="{% url 'user:update-profile' %}" class="edit-button">
+                    ✏️ Edit Profile
+                </a>
+
+                <a href="{% url 'user:change-pass' %}" class="edit-button change-pass-btn">
+                    🔒 Change Password
+                </a>
+            </div>
         </div>
+
     </div>
 </div>
 
@@ -70,11 +81,19 @@
     margin-bottom: 20px;
 }
 
+/* Buttons */
+.profile-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .edit-button {
     display: inline-block;
     background: #f2d27a;
     color: #3b2f23;
-    padding: 10px 25px;
+    padding: 10px 22px;
     border-radius: 8px;
     font-weight: 500;
     text-decoration: none;
@@ -85,6 +104,16 @@
     background: #e6c165;
 }
 
+.change-pass-btn {
+    background: #e6b3b3;
+    color: #4a1f1f;
+}
+
+.change-pass-btn:hover {
+    background: #d89a9a;
+}
+
+/* Desktop */
 @media (min-width: 768px) {
     .profile-card {
         display: flex;
@@ -99,6 +128,10 @@
 
     .profile-info {
         flex-grow: 1;
+    }
+
+    .profile-buttons {
+        justify-content: flex-start;
     }
 }
 </style>

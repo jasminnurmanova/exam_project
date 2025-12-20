@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from django import forms
 from .models import CustomUser
 
@@ -40,3 +42,20 @@ class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model= CustomUser
         fields=['username','first_name','last_name','email','image','address']
+
+
+class CustomUserChangePassForm(forms.Form):
+    old_password1 = forms.CharField(widget=forms.PasswordInput)
+    new_password2 = forms.CharField(widget=forms.PasswordInput)
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        data = super().clean()
+        if data.get('new_password2') != data.get('confirm_new_password'):
+            raise forms.ValidationError('Пароли не совпадают')
+        return data
+
+    def save(self, user):
+        user.set_password(self.cleaned_data['new_password2'])
+        user.save()
+        return user

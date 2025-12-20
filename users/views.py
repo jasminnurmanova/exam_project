@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate,update_session_auth_hash
-from .forms import CustomUserRegisterForm, CustomUserUpdateForm
+from .forms import CustomUserRegisterForm, CustomUserUpdateForm,CustomUserChangePassForm
 from django.views import View
 from products.models import Product
 from .models import CustomUser
@@ -65,3 +65,16 @@ class ProfileUpdateView(View):
 
         return render(request,'user/profile-update.html',{'form':form })
 
+class CustomUserChangePassView(View):
+    def get(self,request):
+        form = CustomUserChangePassForm()
+        return render(request,'user/change_pass.html',{'form':form})
+
+    def post(self,request):
+        form = CustomUserChangePassForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+            update_session_auth_hash(request, request.user)
+            return redirect ('user:profile')
+
+        return render(request,'user/change_pass.html',{'form':form })
