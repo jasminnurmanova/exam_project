@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Comment{% endblock %}
+
+{% block content %}
+
+<div style="
+    max-width:600px;
+    margin:40px auto;
+    background:#fffdf7;
+    padding:25px;
+    border-radius:12px;
+    border:1px solid #f2d27a;
+">
+
+    <h2 style="text-align:center;">✏ Edit Comment</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <p>
+            <label>Comment text</label><br>
+            {{ form.text }}
+        </p>
+
+        <p>
+            <label>Rate (0–5)</label><br>
+            {{ form.rate }}
+        </p>
+
+        <p>
+            <label>Image (optional)</label><br>
+            {{ form.image_comment }}
+        </p>
+
+        {% if comment.image_comment %}
+            <p>Current image:</p>
+            <img src="{{ comment.image_comment.url }}"
+                 style="max-width:200px;border-radius:8px;">
+        {% endif %}
+
+        <br><br>
+
+        <button type="submit">💾 Save changes</button>
+        <a href="{% url 'detail' comment.product.pk %}"
+           style="margin-left:15px;">Cancel</a>
+    </form>
+
+</div>
+
+{% endblock %}

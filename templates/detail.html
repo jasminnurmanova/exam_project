@@ -1,88 +1,109 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
 
-<div style="
-    max-width:800px;
-    margin:30px auto;
-    background:#fffdf7;
-    padding:25px;
-    border-radius:15px;
-    border:1px solid #f2d27a;
-    box-shadow:0 0 10px rgba(0,0,0,0.12);
-">
+<div style="max-width:800px;margin:30px auto;background:#fffdf7;
+            padding:25px;border-radius:15px;border:1px solid #f2d27a;">
 
-    <!-- Product Name -->
-    <h1 style="text-align:center; color:#a88632; margin-bottom:20px;">
-        {{ product.name }}
-    </h1>
+    <h1 style="text-align:center;">{{ product.name }}</h1>
 
-    <!-- Image -->
-    <div style="text-align:center; margin-bottom:20px;">
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                 style="max-width:350px; max-height:350px; border-radius:12px;">
-        {% endif %}
-    </div>
+    {% if product.image %}
+        <img src="{{ product.image.url }}"
+             style="display:block;margin:auto;max-width:350px;border-radius:12px;">
+    {% endif %}
 
-    <!-- Info -->
-    <div style="font-size:18px; line-height:1.6; color:#4d3b28;">
+    <p><b>Price:</b> {{ product.price }}</p>
+    <p><b>Quantity:</b> {{ product.quantity }}</p>
+    <p><b>Metal:</b> {{ product.metal }}</p>
+    <p><b>Average rate:</b> {{ product.avg_rate }}</p>
 
-        <p><strong style="color:#a88632;">Price:</strong> {{ product.price }}</p>
-        <p><strong style="color:#a88632;">Quantity:</strong> {{ product.quantity }}</p>
-        <p><strong style="color:#a88632;">Available:</strong> {{ product.is_available }}</p>
-        <p><strong style="color:#a88632;">Created at:</strong> {{ product.created_at }}</p>
+    <hr>
 
-        {% if product.description %}
-        <p>
-            <strong style="color:#a88632;">Description:</strong><br>
-            {{ product.description }}
-        </p>
-        {% endif %}
-    </div>
+    <!-- ADD COMMENT -->
+    {% if request.user.is_authenticated %}
+    <h2>Add Comment</h2>
 
-    <!-- Buttons -->
-    <div style="margin-top:30px; text-align:center;">
+    <form method="post"
+          action="{% url 'add_comment' product.pk %}"
+          enctype="multipart/form-data">
 
-        <!-- Back -->
-        <a href="{% url 'home' %}"
-           style="padding:10px 20px; margin:5px;
-                  background:#f2d27a; color:#3b2f23;
-                  border-radius:8px; font-weight:600;
-                  text-decoration:none; display:inline-block;">
-            ⬅ Back to Products
-        </a>
+        {% csrf_token %}
 
-        <!-- Category -->
-        <a href="{% url 'category_detail' product.category.pk %}"
-           style="padding:10px 20px; margin:5px;
-                  background:#f2d27a; color:#3b2f23;
-                  border-radius:8px; font-weight:600;
-                  text-decoration:none; display:inline-block;">
-            Category: {{ product.category.name }}
-        </a>
+        <textarea name="text" required
+                  placeholder="Your comment"
+                  style="width:100%;"></textarea><br><br>
 
-        <!-- Update -->
-        <a href="{% url 'product_update' product.pk %}"
-           style="padding:10px 20px; margin:5px;
-                  background:#e3be62; color:#3b2f23;
-                  border-radius:8px; font-weight:600;
-                  text-decoration:none; display:inline-block;">
-            ✏ Update
-        </a>
+        <input type="number" name="rate" min="0" max="5" value="0"><br><br>
 
-        <!-- Delete -->
-        <a href="{% url 'product_delete' product.pk %}"
-           style="padding:10px 20px; margin:5px;
-                  background:#c9934c; color:white;
-                  border-radius:8px; font-weight:600;
-                  text-decoration:none; display:inline-block;">
+        <input type="file" name="image_comment"><br><br>
+
+        <button type="submit">➕ Add Comment</button>
+    </form>
+    {% endif %}
+
+    <hr>
+
+    <!-- COMMENTS -->
+    <h2>Comments</h2>
+
+    {% for comment in product.comments.all %}
+        <div style="border:1px solid #ddd;padding:15px;
+                    margin-bottom:15px;border-radius:10px;">
+
+            <div style="display:flex;align-items:center;gap:10px;">
+                {% if comment.user.image %}
+                    <img src="{{ comment.user.image.url }}"
+                         style="width:40px;height:40px;border-radius:50%;">
+                {% else %}
+                    <img src="{% static 'default_user.png' %}"
+                         style="width:40px;height:40px;border-radius:50%;">
+                {% endif %}
+                <strong>{{ comment.user.username }}</strong>
+                {% if comment.user == request.user %}
+    <a href="{% url 'comment_edit' comment.pk %}"
+       style="margin-left:10px; font-size:14px;">
+        ✏ Edit
+    </a>
+{% endif %}
+                {% if comment.user == request.user %}
+    <form method="post"
+          action="{% url 'comment_delete' comment.pk %}"
+          style="display:inline;">
+        {% csrf_token %}
+        <button type="submit"
+                style="background:#c0392b;color:white;
+                       border:none;padding:5px 10px;
+                       border-radius:6px;cursor:pointer;">
             ❌ Delete
-        </a>
+        </button>
+    </form>
+{% endif %}
 
-    </div>
+
+
+            <small>{{ comment.created_at|date:"d M Y H:i" }}</small>
+
+            {% if comment.rate > 0 %}
+                <div>
+                    {% for i in "12345"|slice:":comment.rate" %}
+                        ⭐
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <p>{{ comment.text }}</p>
+
+            {% if comment.image_comment %}
+                <img src="{{ comment.image_comment.url }}"
+                     style="max-width:200px;border-radius:8px;">
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
 
 </div>
 

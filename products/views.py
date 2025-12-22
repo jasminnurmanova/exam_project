@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Product,Category
+from .models import Product,Category,Comment
 from django.views import View
 from django.shortcuts import get_object_or_404
-from .forms import ProductForms
+from .forms import ProductForms, CommentForm
 from django.db.models import Q
 
 
@@ -30,8 +30,10 @@ class Home(View):
 class ProductDetail(View):
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        context = {'product': product}
+        comments=product.comments.all().order_by('-id')
+        context = {'product': product,'comments':comments}
         return render(request, 'detail.html', context)
+
 
 
 class CategoryDetail(View):
@@ -54,7 +56,9 @@ class ProductCreate(View):
     def post(self, request):
         form = ProductForms(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            product=form.save(commit=False)
+            product.owner=request.user
+            product.save()
             return redirect('home')
         categories = Category.objects.all()
         return render(request, 'create_product.html', {'form': form, 'categories': categories})
@@ -87,4 +91,46 @@ class ProductDelete(View):
         product = get_object_or_404(Product, pk=pk)
         product.delete()
         return redirect('home')
+
+class CreateCommentView(View):
+    def post(self,request,pk):
+        product=get_object_or_404(Product,pk=pk)
+        form=CommentForm(request.POST,request.FILES)
+        if form.is_valid():
+            coment=form.save(commit=False)
+            coment.product=product
+            coment.user=request.user
+            coment.save()
+        return redirect('detail',pk=product.pk)
+
+
+class CommentUpdate(View):
+    def get(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        form = CommentForm(instance=comment)
+        return render(request, 'comment_edit.html', {
+            'form': form,
+            'comment': comment
+        })
+
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        form = CommentForm(request.POST, request.FILES, instance=comment)
+
+        if form.is_valid():
+            form.save()
+            return redirect('detail', pk=comment.product.pk)
+
+        return render(request, 'comment_edit.html', {
+            'form': form,
+            'comment': comment
+        })
+
+class CommentDelete(View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk, user=request.user)
+        product_pk = comment.product.pk
+        comment.delete()
+        return redirect('detail', pk=product_pk)
+
 

@@ -30,7 +30,10 @@ class RegisterView(View):
 class ProfileView(View):
     def get(self,request):
         user = request.user
-        return render(request,'user/profile.html',{'user':user})
+        products=user.products.all().order_by('-id')
+        comments=user.user_comments.all()
+        context={'user':user,'products':products,'comments':comments}
+        return render(request,'user/profile.html',context)
 
 
 class LoginView(View):
